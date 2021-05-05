@@ -1,24 +1,29 @@
 import React from 'react';
 import logo from '../../assets/img/logo.svg';
 import Greetings from '../../containers/Greetings/Greetings';
+import { getAccount, requestAccounts } from "./utils"
 import './Popup.css';
 
 const Popup = () => {
+  const [account, setAccount] = React.useState("");
+  const onClick = React.useCallback(() => {
+    requestAccounts().then(accounts => {
+      setAccount(accounts[0])
+    })
+  }, [])
+  React.useEffect(() => {
+    getAccount().then(accounts => {
+      if (accounts && accounts[0]) {
+        setAccount(accounts[0])
+      }
+    })
+  }, [])
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/pages/Popup/Popup.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React!
-        </a>
+        {
+          account ? <div className="App-Account">Metamask Account: {account}</div> : <button onClick={onClick}>Connect to Metamask</button>
+        }
       </header>
     </div>
   );

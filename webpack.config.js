@@ -106,9 +106,20 @@ var options = {
     extensions: fileExtensions
       .map((extension) => '.' + extension)
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
+    fallback: {
+      stream: require.resolve('readable-stream'),
+      crypto: require.resolve('crypto-browserify'),
+      buffer: require.resolve('buffer'),
+      process: require.resolve('process'),
+    },
   },
   plugins: [
     new webpack.ProgressPlugin(),
+
+    new webpack.ProvidePlugin({
+      process: 'process/browser.js',
+      Buffer: ['buffer', 'Buffer'],
+    }),
     // clean the build folder
     new CleanWebpackPlugin({
       verbose: true,
